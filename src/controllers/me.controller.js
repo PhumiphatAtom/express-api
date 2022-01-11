@@ -1,11 +1,11 @@
-const getMe = (req, res) => {
+exports.getMe = (req, res) => {
   res.send({
     firstName: "Atom",
     lastname: "AAA",
   });
 };
 
-const postMe = (req, res) => {
+exports.postMe = (req, res) => {
   const body = req.body;
   res.send({
     firstName: body.firstName,
@@ -14,7 +14,7 @@ const postMe = (req, res) => {
   });
 };
 
-const postProfile = (req, res) => {
+exports.postProfile = (req, res) => {
   const body = req.body;
   res.send({
     firstName: body.firstName,
@@ -22,12 +22,4 @@ const postProfile = (req, res) => {
     nickName: body.nickName,
     age: 25,
   });
-};
-
-module.exports = {
-  // path 1
-  getMe,
-  postMe,
-  // path 2
-  postProfile,
 };

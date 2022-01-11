@@ -1,11 +1,11 @@
 const express = require("express");
-const { getMe, postMe, postProfile } = require("../controllers/me.controller");
+const services = require("../controllers/me.controller");
 const app = express();
 
-app.get("/", getMe);
+app.get("/", services.getMe);
 
-app.post("/", postMe);
+app.post("/", services.postMe);
 
-app.post("/profile", postProfile);
+app.post("/profile", services.postProfile);
 
 module.exports = app;
