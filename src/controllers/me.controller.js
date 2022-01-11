@@ -5,7 +5,7 @@ const getMe = (req, res) => {
   });
 };
 
-const PostMe = (req, res) => {
+const postMe = (req, res) => {
   const body = req.body;
   res.send({
     firstName: body.firstName,
@@ -14,7 +14,7 @@ const PostMe = (req, res) => {
   });
 };
 
-const PostProfile = (req, res) => {
+const postProfile = (req, res) => {
   const body = req.body;
   res.send({
     firstName: body.firstName,
@@ -25,10 +25,9 @@ const PostProfile = (req, res) => {
 };
 
 module.exports = {
-  // past 1
+  // path 1
   getMe,
-  PostMe,
-
-  // past 2
-  PostProfile,
+  postMe,
+  // path 2
+  postProfile,
 };
