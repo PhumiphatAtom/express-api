@@ -79,3 +79,14 @@ exports.editUserByUsername = async (req, res) => {
     data: user,
   });
 };
+
+exports.delUserByUsername = async (req, res) => {
+  const params = req.params;
+  const user = await UserModel.findOneAndDelete({ username: params.username });
+
+  res.send({
+    statusCode: 200,
+    message: "delUserByUsername success",
+    data: user,
+  });
+};
