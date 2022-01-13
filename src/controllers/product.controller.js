@@ -13,6 +13,7 @@ exports.addProduct = async (req, res) => {
     description: body.description,
     price: body.price,
     img_url: body.img_url,
+    quantity: body.quantity,
   };
   const product = new ProductModel(productPayload);
   await product.save();
