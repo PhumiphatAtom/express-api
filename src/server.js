@@ -23,6 +23,9 @@ app.use("/me", meRoute);
 const userRoute = require("./route/user.route");
 app.use("/user", userRoute);
 
+const productRoute = require("./route/product.route");
+app.use("/product", productRoute);
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });

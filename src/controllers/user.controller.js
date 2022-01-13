@@ -1,5 +1,5 @@
 const UserModel = require("../models/user.model");
-const { param } = require("../route/me.route");
+const { param } = require("../route/user.route");
 
 /**
  *
