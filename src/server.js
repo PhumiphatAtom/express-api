@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser"); // แปลง json body
 const mongoose = require("mongoose");
+const cors = require("cors")
 const MONGO_URL = process.env.MONGO_URL;
 mongoose.connect(MONGO_URL, () => {
   console.log("mongoDB conected!!");
@@ -9,6 +10,8 @@ mongoose.connect(MONGO_URL, () => {
 
 const app = express();
 const port = 4321;
+
+app.use(cors())
 
 app.use(bodyParser.json()); // เรียกใช้
 
