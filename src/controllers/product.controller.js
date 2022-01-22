@@ -45,7 +45,6 @@ exports.getProductBy_id = async (req, res) => {
  * @param {import("express").Request} req
  * @param {import("express").Response} res
  */
-
 exports.editProductBy_id = async (req, res) => {
   const body = req.body;
   const params = req.params;
