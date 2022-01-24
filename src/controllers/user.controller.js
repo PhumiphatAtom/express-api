@@ -1,6 +1,6 @@
-const UserModel = require("../models/user.model");
+const UserModel = require('../models/user.model');
 
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
 const saltRounds = 10;
 /**
  *
@@ -8,9 +8,19 @@ const saltRounds = 10;
  * @param {import("express").Response} res
  */
 exports.register = async (req, res) => {
-  const body = req.body;
-  const checkUsername = await UserModel.exists({ username: body.username });
-  if (!checkUsername) {
+  try {
+    const body = req.body;
+    const userExists = await UserModel.exists({ username: body.username });
+    if (userExists) {
+      res
+        .send({
+          statusCode: 400,
+          message: 'Username already exists',
+        })
+        .end();
+      return;
+    }
+
     const hashPassword = await bcrypt.hash(body.password, saltRounds);
     const registerPayload = {
       username: body.username,
@@ -21,37 +31,58 @@ exports.register = async (req, res) => {
     await register.save();
     res.send({
       statusCode: 200,
-      message: "register Success",
+      message: 'register Success',
       data: null,
     });
-  } else {
-    res.send({
-      statusCode: 400,
-      message: "Username already exists",
-    });
+  } catch (error) {
+    console.log('register error: ', error.message);
+    res.send({ statusCode: 500, message: 'server error' });
   }
 };
 
+/**
+ *
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ */
 exports.login = async (req, res) => {
-  const body = req.body;
-  const user = await UserModel.findOne({ username: body.username });
-  if (user == null) {
-    res.send({ statusCode: 404, message: "Username or Password invalid" });
-  } else {
+  try {
+    const body = req.body;
+
+    // if(yup.validate())
+    const user = await UserModel.findOne({ username: body.username });
+    if (!user) {
+      res
+        .send({
+          statusCode: 404,
+          message: 'Username or Password invalid',
+          data: null,
+        })
+        .end();
+      return;
+    }
+
     const match = await bcrypt.compare(body.password, user.password);
     if (!match) {
-      res.send({ statusCode: 404, message: "Username or Password invalid" });
-    } else {
-      res.send({ statusCode: 200, message: "Login success" });
+      res
+        .send({
+          statusCode: 404,
+          message: 'Username or Password invalid',
+          data: null,
+        })
+        .end();
+      return;
     }
-  }
-  // const match = await bcrypt.compare(password, body.password);
 
-  // if(match) {
-  //login
-  // }
-  // รับ username password จากหน้าบ้าน
-  // เอา username password ที่รับมาไปเช็คกับ username password ใน database
-  // ถ้าเช็คแล้วเจอให้ส่งค่าไปหน้าบ้าน
-  // ถ้าเช็คแล้วไม่เจอให้ message ไปหน้าบ้านว่าไม่เจอ
+    res.send({
+      statusCode: 200,
+      message: 'Login success',
+      data: {
+        token: 'JWT Token',
+      },
+    });
+  } catch (error) {
+    console.log('login error: ', error.message);
+    res.send({ statusCode: 500, message: 'server error' });
+  }
 };
