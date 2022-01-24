@@ -1,5 +1,5 @@
 const ProductModel = require("../models/product.model");
-const { param } = require("../route/product.route");
+// const { param } = require("../route/product.route");
 
 /**
  *

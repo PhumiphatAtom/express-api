@@ -1,92 +1,58 @@
 const UserModel = require("../models/user.model");
-const { param } = require("../route/user.route");
 
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 /**
  *
  * @param {import("express").Request} req
  * @param {import("express").Response} res
  */
-exports.addUser = async (req, res) => {
+exports.register = async (req, res) => {
   const body = req.body;
-  const userPayload = {
-    first_name: body.first_name,
-    last_name: body.last_name,
-    username: body.username,
-    password: body.password,
-  };
-  const user = new UserModel(userPayload);
-  await user.save();
-  res.send({ statusCode: 200, message: "addUser success", data: user });
-};
-
-/**
- *
- * @param {import("express").Request} req
- * @param {import("express").Response} res
- */
-
-exports.getUsers = async (req, res) => {
-  const users = await UserModel.find({});
-  res.send({ statusCode: 200, message: "getUser success", data: users });
-};
-
-/**
- *
- * @param {import("express").Request} req
- * @param {import("express").Response} res
- */
-
-exports.getUserByUsername = async (req, res) => {
-  const params = req.params;
-  const user = await UserModel.findOne({ username: params.username });
-
-  res.send({
-    statusCode: 200,
-    message: "getUserByUsername success",
-    data: user,
-  });
-};
-
-/**
- *
- * @param {import("express").Request} req
- * @param {import("express").Response} res
- */
-
-exports.editUserByUsername = async (req, res) => {
-  const body = req.body;
-  const params = req.params;
-
-  const checkUser = await UserModel.findOne({ username: params.username });
-  if (!checkUser) {
+  const checkUsername = await UserModel.exists({ username: body.username });
+  if (!checkUsername) {
+    const hashPassword = await bcrypt.hash(body.password, saltRounds);
+    const registerPayload = {
+      username: body.username,
+      password: hashPassword,
+      avatar_url: body.avatar_url,
+    };
+    const register = new UserModel(registerPayload);
+    await register.save();
     res.send({
-      statusCode: 400,
-      message: "Notfound user",
+      statusCode: 200,
+      message: "register Success",
       data: null,
     });
-    end();
+  } else {
+    res.send({
+      statusCode: 400,
+      message: "Username already exists",
+    });
   }
-
-  const user = await UserModel.findOneAndUpdate(
-    { username: params.username },
-    { $set: body },
-    { new: true }
-  );
-
-  res.send({
-    statusCode: 200,
-    message: "editUserByUsername success",
-    data: user,
-  });
 };
 
-exports.delUserByUsername = async (req, res) => {
-  const params = req.params;
-  const user = await UserModel.findOneAndDelete({ username: params.username });
+exports.login = async (req, res) => {
+  const body = req.body;
+  const user = await UserModel.findOne({ username: body.username });
+  if (user == null) {
+    res.send({ statusCode: 404, message: "Username or Password invalid" });
+  } else {
+    const hashPassword = await bcrypt.hash(body.password, saltRounds);
+    const match = await bcrypt.compare(hashPassword, user.password);
+    if (!match) {
+      res.send({ statusCode: 404, message: "Username or Password invalid" });
+    } else {
+      res.send({ statusCode: 200, message: "Login success" });
+    }
+  }
+  // const match = await bcrypt.compare(password, body.password);
 
-  res.send({
-    statusCode: 200,
-    message: "delUserByUsername success",
-    data: user,
-  });
+  // if(match) {
+  //login
+  // }
+  // รับ username password จากหน้าบ้าน
+  // เอา username password ที่รับมาไปเช็คกับ username password ใน database
+  // ถ้าเช็คแล้วเจอให้ส่งค่าไปหน้าบ้าน
+  // ถ้าเช็คแล้วไม่เจอให้ message ไปหน้าบ้านว่าไม่เจอ
 };
