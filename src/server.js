@@ -29,8 +29,9 @@ app.use("/user", userRoute);
 const productRoute = require("./route/product.route");
 app.use("/product", productRoute);
 
-const { register } = require("./controllers/user.controller");
+const { register, login } = require("./controllers/user.controller");
 app.post("/register", register);
+app.post("/login", login)
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

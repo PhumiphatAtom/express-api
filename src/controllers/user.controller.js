@@ -38,8 +38,7 @@ exports.login = async (req, res) => {
   if (user == null) {
     res.send({ statusCode: 404, message: "Username or Password invalid" });
   } else {
-    const hashPassword = await bcrypt.hash(body.password, saltRounds);
-    const match = await bcrypt.compare(hashPassword, user.password);
+    const match = await bcrypt.compare(body.password, user.password);
     if (!match) {
       res.send({ statusCode: 404, message: "Username or Password invalid" });
     } else {
