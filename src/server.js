@@ -29,8 +29,8 @@ app.use("/user", userRoute);
 const productRoute = require("./route/product.route");
 app.use("/product", productRoute);
 
-const { register, login } = require("./controllers/user.controller");
-app.post("/register", register);
+const { registers, login } = require("./controllers/user.controller");
+app.post("/register", registers);
 app.post("/login", login)
 
 app.listen(port, () => {
