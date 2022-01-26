@@ -1,7 +1,7 @@
-const UserModel = require("../models/user.model");
-const jwt = require("jsonwebtoken");
+const UserModel = require('../models/user.model');
+const jwt = require('jsonwebtoken');
 
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 /**
@@ -17,7 +17,7 @@ exports.registers = async (req, res) => {
       res
         .send({
           statusCode: 400,
-          message: "Username already exists",
+          message: 'Username already exists',
         })
         .end();
       return;
@@ -33,12 +33,12 @@ exports.registers = async (req, res) => {
     await register.save();
     res.send({
       statusCode: 200,
-      message: "register Success",
+      message: 'register Success',
       data: null,
     });
   } catch (error) {
-    console.log("register error: ", error.message);
-    res.send({ statusCode: 500, message: "server error" });
+    console.log('register error: ', error.message);
+    res.send({ statusCode: 500, message: 'server error' });
   }
 };
 
@@ -57,7 +57,7 @@ exports.login = async (req, res) => {
       res
         .send({
           statusCode: 404,
-          message: "Username or Password invalid",
+          message: 'Username or Password invalid',
           data: null,
         })
         .end();
@@ -69,7 +69,7 @@ exports.login = async (req, res) => {
       res
         .send({
           statusCode: 404,
-          message: "Username or Password invalid",
+          message: 'Username or Password invalid',
           data: null,
         })
         .end();
@@ -84,30 +84,30 @@ exports.login = async (req, res) => {
       },
       process.env.SECRET_KEY,
       {
-        expiresIn: "3d",
+        expiresIn: '3d',
       }
     );
 
     res.send({
       statusCode: 200,
-      message: "Login success",
+      message: 'Login success',
       data: {
         token: token,
       },
     });
   } catch (error) {
-    console.log("login error: ", error.message);
-    res.send({ statusCode: 500, message: "server error" });
+    console.log('login error: ', error.message);
+    res.send({ statusCode: 500, message: 'server error' });
   }
 };
 
 exports.getProfile = async (req, res) => {
   try {
     const username = req.user.username;
-    const profile = await UserModel.findOne({ username });
-    const clean = { ...profile.toObject(), password: null };
-    res.send({ statusCode: 200, message: "success", data: clean });
+    const profile = await UserModel.findOne({ username }, { password: false });
+    // const clean = { ...profile.toObject(), password: null };
+    res.send({ statusCode: 200, message: 'success', data: profile });
   } catch (error) {
-    res.send({ statusCode: 500, message: "server error" });
+    res.send({ statusCode: 500, message: 'server error' });
   }
 };
