@@ -100,3 +100,14 @@ exports.login = async (req, res) => {
     res.send({ statusCode: 500, message: "server error" });
   }
 };
+
+exports.getProfile = async (req, res) => {
+  try {
+    const username = req.user.username;
+    const profile = await UserModel.findOne({ username });
+    const clean = { ...profile.toObject(), password: null };
+    res.send({ statusCode: 200, message: "success", data: clean });
+  } catch (error) {
+    res.send({ statusCode: 500, message: "server error" });
+  }
+};
