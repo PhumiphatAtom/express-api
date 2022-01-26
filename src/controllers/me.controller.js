@@ -1,7 +1,8 @@
 exports.getMe = (req, res) => {
   res.send({
-    firstName: "Atom",
-    lastname: "AAA",
+    statusCode: 200,
+    message: 'success',
+    data: req.user,
   });
 };
 
